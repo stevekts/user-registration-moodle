@@ -14,6 +14,22 @@ if (isloggedin() && !isguestuser()) {
 
 $mform = new \local_customregistration\registration_form();
 
+if ($data = $mform->get_data()) {
+    $userid = \local_customregistration\registration_manager::create_user($data);
+
+    if ($userid) {
+        \core\notification::success(
+            get_string('registrationsuccess', 'local_customregistration')
+        );
+
+        redirect(new moodle_url('/login/index.php'));        
+    } else {
+        \core\notification::error(
+            get_string('registrationfailed', 'local_customregistration')
+        );
+    }
+}
+
 echo $OUTPUT->header();
 $mform->display();
 echo $OUTPUT->footer();
